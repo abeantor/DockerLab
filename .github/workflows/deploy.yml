@@ -18,23 +18,26 @@ jobs:
       - name: Set up SSH for EC2
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_ed25519
+          echo "${{ secrets.AWS_EC2_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
-      # Step 3: Deploy and manage code on EC2 agian
+      # Step 3: Push changes to GitHub (if not already done) and deploy to EC2
+      - name: Push changes to GitHub
+        run: |
+          git add .
+          git commit -m "Deploy changes"
+          git push origin main
+
+      # Step 4: Deploy and manage code on EC2
       - name: Deploy to EC2
         run: |
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ubuntu@3.80.153.97 << 'EOF'
-            # Ensure the repo is present or clone it
-            if [ ! -d "/home/ubuntu/docker-todo" ]; then
-              git clone git@github.com:Antor1992/docker-todo.git /home/ubuntu/docker-todo
-            fi
+            # Change directory to the location where your DockerLab project is located
+            cd ~/DockerLab/todo-list-app
 
-            # Always pull the latest code before proceeding
-            cd /home/ubuntu/docker-todo
-            git checkout main
+            # Pull the latest changes from GitHub to the EC2 instance
             git pull origin main
 
             # Ensure Docker has permission for the current user
