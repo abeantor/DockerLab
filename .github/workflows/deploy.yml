@@ -22,14 +22,20 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
-      # Step 3: Push changes to GitHub (if not already done) and deploy to EC2
+      # Step 3: Set up Git user identity for commits
+      - name: Set Git user identity
+        run: |
+          git config --global user.name "abeantor"
+          git config --global user.email "abuantor72@gmail.com"
+
+      # Step 4: Push changes to GitHub (if not already done) and deploy to EC2
       - name: Push changes to GitHub
         run: |
           git add .
           git commit -m "Deploy changes"
           git push origin main
 
-      # Step 4: Deploy and manage code on EC2
+      # Step 5: Deploy and manage code on EC2
       - name: Deploy to EC2
         run: |
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ubuntu@3.80.153.97 << 'EOF'
