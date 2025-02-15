@@ -23,7 +23,7 @@ jobs:
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
-      # Step 3: Deploy and manage code on EC2
+      # Step 3: Deploy and manage code on EC2 agian
       - name: Deploy to EC2
         run: |
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ubuntu@3.80.153.97 << 'EOF'
