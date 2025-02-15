@@ -18,7 +18,7 @@ jobs:
       - name: Set up SSH for EC2
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.AWS_EC2_SSH_KEY }}" > ~/.ssh/id_ed25519
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
