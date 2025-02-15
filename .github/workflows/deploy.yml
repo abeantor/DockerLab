@@ -28,12 +28,16 @@ jobs:
           git config --global user.name "abeantor"
           git config --global user.email "abuantor72@gmail.com"
 
-      # Step 4: Push changes to GitHub (if not already done) and deploy to EC2
+      # Step 4: Push changes to GitHub (if any changes)
       - name: Push changes to GitHub
         run: |
           git add .
-          git commit -m "Deploy changes"
-          git push origin main
+          if ! git diff --cached --quiet; then
+            git commit -m "Deploy changes"
+            git push origin main
+          else
+            echo "No changes to commit."
+          fi
 
       # Step 5: Deploy and manage code on EC2
       - name: Deploy to EC2
